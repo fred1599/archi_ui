@@ -1,5 +1,3 @@
-import os
-
 from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (
     QPlainTextEdit,

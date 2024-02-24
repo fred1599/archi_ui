@@ -15,13 +15,13 @@ from interfaces.ui import UIPort
 
 
 class PyqtUI(UIPort):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.file = FileText()
         self.directory = Directory()
         self.setup_ui()
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
         self.main_window = QMainWindow()
         self.main_widget = QWidget()
         self.layout = QHBoxLayout(self.main_widget)
@@ -37,7 +37,9 @@ class PyqtUI(UIPort):
 
         self.main_window.setCentralWidget(self.main_widget)
 
-    def setup_menu(self):
+        self.apply_styles()
+
+    def setup_menu(self) -> None:
         menu_bar = self.main_window.menuBar()
         menu = menu_bar.addMenu("&Menu")
 
@@ -46,6 +48,34 @@ class PyqtUI(UIPort):
         )
         choose_directory_action.triggered.connect(self.ask_path_directory)
         menu.addAction(choose_directory_action)
+
+    def apply_styles(self) -> None:
+        self.main_window.setStyleSheet(
+            """
+            QWidget {
+                font-size: 14px;
+                color: #333;
+            }
+            QPlainTextEdit {
+                background-color: #f0f0f0;
+                border: 1px solid #ccc;
+                padding: 5px;
+            }
+            QListWidget {
+                background-color: #e8e8e8;
+                border: none;
+            }
+            QMenuBar {
+                background-color: #a1a1a1;
+            }
+            QMenu {
+                background-color: #c2c2c2;
+            }
+            QAction {
+                background-color: #d3d3d3;
+            }
+        """
+        )
 
     def display_content_file(self, item: QListWidgetItem) -> None:
         filename = item.text()
@@ -66,5 +96,5 @@ class PyqtUI(UIPort):
         self.display_list_files()
         self.editor.clear()
 
-    def show(self):
+    def show(self) -> None:
         self.main_window.show()

@@ -1,11 +1,13 @@
 import sys
+from importlib import import_module
 
-from PyQt6.QtWidgets import QApplication
+try:
+    option = sys.argv[1]
+except IndexError:
+    sys.exit("Ajouter une option tk ou qt")
 
-from infrastructure.pyqtadapter import PyqtUI
-
-app = QApplication(sys.argv)
-ui = PyqtUI()
-ui.display_list_files()
-ui.show()
-sys.exit(app.exec())
+if option in ("tk", "qt"):
+    module = f"main_{option}"
+    import_module(module)
+else:
+    sys.exit(f"L'option {option} n'existe pas, seulement (tk ou qt)")

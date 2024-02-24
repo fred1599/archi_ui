@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, Listbox, Text, Menu
-from tkinter import ttk
+from tkinter import ttk  # Pour des widgets plus modernes et un thème
 
 from model.file import FileText
 from model.directory import Directory
@@ -13,6 +13,7 @@ class TkinterUI(UIPort):
         self.file = FileText()
         self.directory = Directory()
         self.setup_ui()
+        self.apply_styles()
 
     def setup_ui(self):
         self.main_window = tk.Tk()
@@ -21,7 +22,7 @@ class TkinterUI(UIPort):
         self.main_frame = ttk.Frame(self.main_window)
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.editor = Text(self.main_frame)
+        self.editor = Text(self.main_frame, wrap="none")
         self.list_widget = Listbox(self.main_frame)
 
         self.editor.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -38,6 +39,17 @@ class TkinterUI(UIPort):
         file_menu = Menu(self.menu_bar, tearoff=0)
         file_menu.add_command(label="Choisir dossier", command=self.ask_path_directory)
         self.menu_bar.add_cascade(label="Menu", menu=file_menu)
+
+    def apply_styles(self):
+        self.main_window.configure(background="#f0f0f0")
+        self.editor.configure(
+            bg="#f0f0f0", fg="#333", borderwidth=1, relief="solid", padx=5, pady=5
+        )
+        self.list_widget.configure(bg="#e8e8e8", borderwidth=0, relief="solid")
+
+        style = ttk.Style()
+        style.configure("TFrame", background="#f0f0f0")
+        style.configure("TMenu", background="#c2c2c2")
 
     def display_content_file(self, event):
         try:

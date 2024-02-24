@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog, Listbox, Text, Menu
 from tkinter import ttk  # Pour des widgets plus modernes et un thème
+from tkinter.messagebox import showwarning
 
 from model.file import FileText
 from model.directory import Directory
+from model.exceptions import FileNotFoundException
 from interfaces.ui import UIPort
 
 
@@ -59,9 +61,13 @@ class TkinterUI(UIPort):
             self.file.construct_from_directory(
                 directory_name=self.directory.name, filename=filename
             )
-            content = self.file.read_content()
-            self.editor.delete("1.0", tk.END)
-            self.editor.insert(tk.END, content)
+            try:
+                content = self.file.read_content()
+            except FileNotFoundException as err:
+                showwarning(title="Warning", message=err.message)
+            else:
+                self.editor.delete("1.0", tk.END)
+                self.editor.insert(tk.END, content)
         except IndexError:
             pass
 

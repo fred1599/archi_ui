@@ -7,10 +7,12 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QWidget,
     QFileDialog,
+    QMessageBox,
 )
 
 from model.file import FileText
 from model.directory import Directory
+from model.exceptions import FileNotFoundException
 from interfaces.ui import UIPort
 
 
@@ -27,6 +29,7 @@ class PyqtUI(UIPort):
         self.layout = QHBoxLayout(self.main_widget)
         self.editor = QPlainTextEdit(self.main_widget)
         self.list_widget = QListWidget(self.main_widget)
+        self.message_box = QMessageBox(parent=self.main_widget)
 
         self.layout.addWidget(self.editor)
         self.layout.addWidget(self.list_widget)
@@ -82,8 +85,13 @@ class PyqtUI(UIPort):
         self.file.construct_from_directory(
             directory_name=self.directory.name, filename=filename
         )
-        content = self.file.read_content()
-        self.editor.setPlainText(content)
+        try:
+            content = self.file.read_content()
+        except FileNotFoundException as err:
+            self.message_box.setText(err.message)
+            self.message_box.exec()
+        else:
+            self.editor.setPlainText(content)
 
     def display_list_files(self) -> None:
         self.list_widget.clear()
